@@ -27,3 +27,22 @@ export function getAttrInfoList(category1Id, category2Id, category3Id) { // 三�
     method: 'get'
   })
 }
+
+export function getReqAttr(data) { // 添加商品属性与属性值
+  return request({
+    url: `/admin/product/saveAttrInfo`,
+    method: 'post',
+    data: data
+  })
+}
+// {
+//   "attrName": "",      属性名
+//   "attrValueList": [   属性名中属性值，因为属性值可以是多个，因此需要的是数组
+//     {
+//       "attrId": 0,          属性的id
+//       "valueName": "string"  属性值
+//     }
+//   ],
+//   "categoryId": 0,    category3Id
+//   "categoryLevel":3,
+// }
