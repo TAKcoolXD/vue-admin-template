@@ -4,8 +4,8 @@
       <CategorySelect @getCategoryId="getCategoryId" />
     </el-card>
     <el-card style="margin: 20px 0;">
-      <div>
-        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="handleTableShow">添加SPU</el-button>
+      <div v-show="flag==1">
+        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="handleSpuShow">添加SPU</el-button>
         <el-table :data="records" border style="width: 100%">
           <el-table-column type="index" label="序号" width="100" align="center" />
           <el-table-column prop="spuName" label="SPU名称" width="300" align="center" />
@@ -60,16 +60,22 @@
           @current-change="handleCurrentChange"
         />
       </div>
+      <SkuFrom v-show="flag==2" />
+      <SpuFrom v-show="flag==3" />
     </el-card>
   </div>
 </template>
 
 <script>
+import SkuFrom from '@/views/product/Spu/SkuFrom/SkuFrom.vue'
+import SpuFrom from '@/views/product/Spu/SpuFrom/SpuFrom.vue'
 import CategorySelect from '@/components/CategorySelect/CategorySelect.vue'
 import { reqSpuList } from '@/api/product/spu'
 export default {
   components: {
-    CategorySelect
+    CategorySelect,
+    SkuFrom,
+    SpuFrom
   },
   data() {
     return {
@@ -79,7 +85,8 @@ export default {
       page: '1',
       limit: '3',
       total: '',
-      records: ''
+      records: '',
+      flag: 1
 
     }
   },
@@ -133,6 +140,10 @@ export default {
       console.log(a)
       this.page = a
       this.getSpuList()
+    },
+    // 点击展示SPu
+    handleSpuShow() {
+      this.flag = 2
     }
   }
 }
