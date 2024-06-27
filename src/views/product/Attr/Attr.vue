@@ -31,7 +31,7 @@
                 size="mini"
                 @click="handleEdit(row)"
               >修改</el-button>
-              <el-button type="danger" icon="el-icon-delete" style="margin: 10px 10px;" size="mini" @click="deleteTradeMark(row)">删除</el-button>
+              <el-button type="danger" icon="el-icon-delete" style="margin: 10px 10px;" size="mini" @click="reqDeleteAttr(row,$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -58,13 +58,15 @@
           </el-table-column>
 
           <el-table-column align="center" label="操作">
-            <template slot-scope="{ row }">
-              <el-button type="primary">删除</el-button>
+            <template slot-scope="{ row ,$index}">
+              <el-popconfirm :title="`${row.valueName}`" @onConfirm="confirmDelete($index,row)" @onCancel="cancelDelete($index)">
+                <el-button slot="reference" type="danger" plain>删除</el-button>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" :disabled="attrInfo.attrValueList.length<1" @click="saveAttr">保存</el-button>
         <el-button @click="isShowTable=true">取消</el-button>
       </div>
     </el-card>
@@ -74,7 +76,7 @@
 
 <script>
 import CategorySelect from '@/components/CategorySelect/CategorySelect.vue'
-import { getAttrInfoList, getReqAttr } from '@/api/product/attr'
+import { getAttrInfoList, reqAddOrUpdateAttr, reqDeleteAttr } from '@/api/product/attr'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
   components: { CategorySelect },
@@ -101,7 +103,7 @@ export default {
     }
   },
   mounted() {
-    getReqAttr()
+    // getReqAttr()
   },
   methods: {
     // 子组建传过来的数据
@@ -154,10 +156,7 @@ export default {
         }
       )
     },
-    // 删除属性
-    deleteTradeMark(row) {
-      console.log('删除', row)
-    },
+    // 响应式数据 修改 编辑双休绑定
     handleEdit(row) {
       console.log('🚀 ~ handleEdit ~ row:', row)
       this.isShowTable = false
@@ -178,6 +177,58 @@ export default {
       })
       if (a) return
       row.flag = false
+    },
+    // 确认删除
+    confirmDelete($index, row) {
+      console.log('删除', $index, row)
+      this.attrInfo.attrValueList.splice($index, 1)
+    },
+    cancelDelete($index) {
+      console.log('取消删除', $index)
+    },
+    // 修改完保存
+    saveAttr() {
+      console.log('保存')
+      this.attrInfo.attrValueList = this.attrInfo.attrValueList.filter(item => {
+        if (item.valueName != '') {
+          delete item.flag
+          return true // filter 需要return 箭头函数可以省略
+        }
+      })
+      reqAddOrUpdateAttr(this.attrInfo).then(res => {
+        console.log(res)
+        const { category1Id, category2Id, category3Id } = this
+        if (res.code === 200) {
+          this.$message.success('保存成功')
+          this.isShowTable = true
+          getAttrInfoList(category1Id, category2Id, category3Id).then(res => {
+            console.log(res)
+            if (res.code === 200) {
+              this.arrtList = res.data
+              console.log('🚀 ~ getAttrInfoList ~  this.arrtList:', this.arrtList)
+            }
+          })
+        }
+      })
+    },
+    // 删除整个属性名称
+    reqDeleteAttr(row, $index) {
+      console.log('删除', row, $index)
+      reqDeleteAttr(row.id).then(res => {
+        console.log(res)
+        if (res.code == 200) {
+          this.$message.success('删除成功')
+          const { category1Id, category2Id, category3Id } = this
+          console.log(category1Id, category2Id, category3Id)
+          getAttrInfoList(category1Id, category2Id, category3Id).then(res => {
+            console.log(res)
+            if (res.code === 200) {
+              this.arrtList = res.data
+              console.log('🚀 ~ getAttrInfoList ~  this.arrtList:', this.arrtList)
+            }
+          })
+        }
+      })
     }
   }
 }

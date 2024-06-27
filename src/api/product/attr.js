@@ -28,7 +28,7 @@ export function getAttrInfoList(category1Id, category2Id, category3Id) { // 三�
   })
 }
 
-export function getReqAttr(data) { // 添加商品属性与属性值
+export function reqAddOrUpdateAttr(data) { // 添加商品属性与属性值
   return request({
     url: `/admin/product/saveAttrInfo`,
     method: 'post',
@@ -46,3 +46,10 @@ export function getReqAttr(data) { // 添加商品属性与属性值
 //   "categoryId": 0,    category3Id
 //   "categoryLevel":3,
 // }
+
+export function reqDeleteAttr(attrId) { // 添加商品属性与属性值
+  return request({
+    url: `/admin/product/deleteAttr/${attrId}`,
+    method: 'delete'
+  })
+}
