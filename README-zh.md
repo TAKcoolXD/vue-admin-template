@@ -111,3 +111,8 @@ Modern browsers and Internet Explorer 10+.
 Copyright (c) 2017-present PanJiaChen
 http://39.98.123.211:8510/swagger-ui.html#!/2183021697225223078423646246152550921475/saveAttrInfoUsingPOST
 http://39.98.123.211:8170/swagger-ui.html#/role45admin45controller
+
+---品牌的数据需要发请求的            http://localhost:9529/dev-api/admin/product/baseTrademark/getTrademarkList
+---获取平台中全部的销售属性（3个）    http://localhost:9529/dev-api/admin/product/baseSaleAttrList
+---获取某一个SPU信息                 Request URL: http://localhost:9529/dev-api/admin/product/getSpuById/5092
+--获取SPU图片                        http://localhost:9529/dev-api/admin/product/spuImageList/5092

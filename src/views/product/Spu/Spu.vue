@@ -30,6 +30,7 @@
                   icon="el-icon-edit"
                   style="margin: 10px 5px;"
                   size="mini"
+                  @click="updateSpu(row)"
                 />
               </el-tooltip>
 
@@ -60,8 +61,8 @@
           @current-change="handleCurrentChange"
         />
       </div>
-      <SkuFrom v-show="flag==2" />
-      <SpuFrom v-show="flag==3" />
+      <SkuFrom v-show="flag==2" ref="sku" @showOne="showOne" />
+      <SpuFrom v-show="flag==3" ref="spu" />
     </el-card>
   </div>
 </template>
@@ -144,7 +145,20 @@ export default {
     // 点击展示SPu
     handleSpuShow() {
       this.flag = 2
+    },
+    showOne(a) {
+      console.log('父传子', a)
+      this.flag = a
+    },
+    // 点击修改spu
+    updateSpu(row) {
+      console.log(row)
+      this.flag = 3
+      console.log('🚀 ~ updateSpu ~ this.$refs.spu:', this.$refs.spu)
+      // 给子组件绑定ref 通过this.$refs.spu可以拿到子组件的数据
+      this.$refs.spu.golist(row)
     }
+
   }
 }
 </script>
