@@ -32,7 +32,7 @@
         <el-select v-model="attrIdAndAttrName" :placeholder="`还有${unSelectSaleAttr.length}未选择`">
           <el-option v-for="(item) in unSelectSaleAttr" :key="item.id" :label="item.name" :value="`${item.id}:${item.name}`" />
         </el-select>
-        <el-button icon="el-icon-plus" type="primary">添加销售属性</el-button>
+        <el-button icon="el-icon-plus" type="primary" @click="addAttr">添加销售属性</el-button>
         <el-table
           border
           :data="spu.spuSaleAttrList"
@@ -71,8 +71,9 @@
                 v-model="row.inputValue"
                 class="input-new-tag"
                 size="small"
+                @blur="handleInputConfirm(row)"
               />
-              <el-button v-else class="button-new-tag" size="small">添加</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row)">添加</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -203,6 +204,40 @@ export default {
     },
     handlerSuccess(response, file, fileList) {
       this.spuImageList = fileList
+    },
+    // 添加销售属性
+    addAttr() {
+      // console.log('添加销售属性')
+      const [baseSaleAttrId, saleAttrName] = this.attrIdAndAttrName.split(':')
+      const newSaleAttr = { baseSaleAttrId, saleAttrName, spuSaleAttrList: [] }
+      this.spu.spuSaleAttrList.push(newSaleAttr)
+      this.attrIdAndAttrName = ''
+    },
+    // tag添加按钮
+    addSaleAttrValue(row) {
+      // console.log('tag添加按钮', row)
+      this.$set(row, 'inputVisible', true)
+      this.$set(row, 'inputValue', '')
+    },
+    // 失去焦点触发
+    handleInputConfirm(row) {
+      console.log('失去焦点触发', row)
+      const { baseSaleAttrId, inputValue } = row
+      if (inputValue.trim() === '') {
+        this.$mseeage('属性值不能为空')
+        return
+      }
+      const result = row.spuSaleAttrValueList.every(item =>
+        item.saleAttrValueName != inputValue
+      )
+      if (!result) {
+        return
+      }
+      const newSaleAttrValue = {
+        baseSaleAttrId, saleAttrValueName: inputValue
+      }
+      row.spuSaleAttrValueList.push(newSaleAttrValue)
+      row.inputVisible = false
     }
   }
 }
