@@ -58,10 +58,11 @@
           >
             <template slot-scope="{row,$index}">
               <el-tag
-                v-for="tag in row.spuSaleAttrValueList"
+                v-for="(tag,index) in row.spuSaleAttrValueList"
                 :key="tag.id"
                 closable
                 :disable-transitions="false"
+                @close="row.spuSaleAttrValueList.splice(index,1)"
               >
                 {{ tag.saleAttrValueName }}
               </el-tag>
@@ -83,7 +84,7 @@
             label="操作"
           >
             <template slot-scope="{row,$index}">
-              <el-button size="mini" plain> 删除</el-button>
+              <el-button size="mini" plain @click="deleteAttrLlstItem($index)"> 删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -238,6 +239,9 @@ export default {
       }
       row.spuSaleAttrValueList.push(newSaleAttrValue)
       row.inputVisible = false
+    },
+    deleteAttrLlstItem($index) {
+      this.spu.spuSaleAttrList.splice($index, 1)
     }
   }
 }
