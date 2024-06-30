@@ -61,8 +61,8 @@
           @current-change="handleCurrentChange"
         />
       </div>
-      <SkuFrom v-show="flag==2" ref="sku" @showOne="showOne" />
-      <SpuFrom v-show="flag==3" ref="spu" />
+      <SkuFrom v-show="flag==2" ref="sku" />
+      <SpuFrom v-show="flag==3" ref="spu" @showOne="showOne" />
     </el-card>
   </div>
 </template>
@@ -140,7 +140,7 @@ export default {
     handleCurrentChange(a) {
       console.log(a)
       this.page = a
-      this.getSpuList()
+      this.getSpuList(this.page)
     },
     // 点击展示SPu
     handleSpuShow() {
@@ -149,6 +149,7 @@ export default {
     showOne(a) {
       console.log('父传子', a)
       this.flag = a
+      this.getSpuList(this.page)
     },
     // 点击修改spu
     updateSpu(row) {

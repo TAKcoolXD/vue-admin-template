@@ -90,7 +90,7 @@
         </el-table>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="addOrUpdateSpu">保存</el-button>
         <el-button @click="$emit('showOne',1)">取消</el-button>
       </el-form-item>
 
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { reqSpuInfo, reqTradeMarkList, reqSpuImageList, reqBaseSaleAttrList } from '@/api/product/spu'
+import { reqSpuInfo, reqTradeMarkList, reqSpuImageList, reqBaseSaleAttrList, reqAddOrUpdateSpu } from '@/api/product/spu'
 export default {
   data() {
     return {
@@ -242,6 +242,27 @@ export default {
     },
     deleteAttrLlstItem($index) {
       this.spu.spuSaleAttrList.splice($index, 1)
+    },
+    // 修改信息保存发送请求
+    addOrUpdateSpu() {
+      console.log('修改信息保存发送请求')
+      this.spu.spuImageList = this.spuImageList.map((item) => {
+        return {
+          imageName: item.name,
+          imageUrl: (item.response && item.response.data) || item.url
+        }
+      })
+      console.log('🚀 ~ this.spu.spuImageList=this.spuImageList.map ~  this.spu.spuImageList :', this.spu.spuImageList)
+      reqAddOrUpdateSpu(this.spu).then(res => {
+        console.log(res)
+        if (res.code == 200) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+          this.$emit('showOne', 1)
+        }
+      })
     }
   }
 }
