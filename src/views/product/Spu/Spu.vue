@@ -64,7 +64,7 @@
           @current-change="handleCurrentChange"
         />
       </div>
-      <SkuFrom v-show="flag==2" ref="sku" />
+      <SkuFrom v-show="flag==2" ref="sku" @changeScenes="changeScenes" />
       <SpuFrom v-show="flag==3" ref="spu" @showOne="showOne" />
     </el-card>
   </div>
@@ -176,6 +176,16 @@ export default {
           this.getSpuList(this.records.length > 1 ? this.page : this.page - 1)
         }
       })
+    },
+    // 点击添加SKU 显示SKu
+    handleEdit(row) {
+      console.log('点击添加SKu按钮 显示SKu模块', row)
+      this.flag = 2
+      this.$refs.sku.getData(this.category1Id, this.category2Id, row)
+    },
+    changeScenes(a) {
+      console.log(a)
+      this.flag = a
     }
 
   }
