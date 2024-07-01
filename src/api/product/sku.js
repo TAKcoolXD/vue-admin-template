@@ -27,3 +27,10 @@ export function reqAddSku(skuInfo) { // 添加Sku
     data: skuInfo
   })
 }
+
+export function reqSkuList(spuId) { // 获取SKU列表数据的接口
+  return request({
+    url: `/admin/product/findBySpuId/${spuId}`,
+    method: 'get'
+  })
+}

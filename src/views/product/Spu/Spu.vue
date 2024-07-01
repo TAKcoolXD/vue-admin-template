@@ -40,6 +40,7 @@
                   icon="el-icon-info"
                   style="margin: 10px 0px;"
                   size="mini"
+                  @click="handler(row)"
                 />
               </el-tooltip>
               <el-tooltip content="删除spu" placement="top">
@@ -66,6 +67,15 @@
       </div>
       <SkuFrom v-show="flag==2" ref="sku" @changeScenes="changeScenes" />
       <SpuFrom v-show="flag==3" ref="spu" @showOne="showOne" />
+      <el-dialog
+        :title="`${spu.spuName
+        }的SKU列表`"
+        :visible.sync="dialogVisible"
+        width="50%"
+        :before-close="handleClose"
+      >
+        <span>这是一段信息</span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -75,6 +85,7 @@ import SkuFrom from '@/views/product/Spu/SkuFrom/SkuFrom.vue'
 import SpuFrom from '@/views/product/Spu/SpuFrom/SpuFrom.vue'
 import CategorySelect from '@/components/CategorySelect/CategorySelect.vue'
 import { reqSpuList, reqDeleteSpu } from '@/api/product/spu'
+import { reqSkuList } from '@/api/product/sku'
 export default {
   components: {
     CategorySelect,
@@ -90,7 +101,9 @@ export default {
       limit: '3',
       total: '',
       records: '',
-      flag: 1
+      flag: 1,
+      spu: {},
+      dialogVisible: false
 
     }
   },
@@ -186,6 +199,14 @@ export default {
     changeScenes(a) {
       console.log(a)
       this.flag = a
+    },
+    handler(row) {
+      this.dialogVisible = true
+      console.log('查看spu和sku', row)
+      this.spu = row
+      reqSkuList().then(res => {
+        console.log(res)
+      })
     }
 
   }
