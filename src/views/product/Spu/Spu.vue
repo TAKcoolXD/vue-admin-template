@@ -5,7 +5,7 @@
     </el-card>
     <el-card style="margin: 20px 0;">
       <div v-show="flag==1">
-        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="handleSpuShow">添加SPU</el-button>
+        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="handleSpuShow()">添加SPU</el-button>
         <el-table :data="records" border style="width: 100%">
           <el-table-column type="index" label="序号" width="100" align="center" />
           <el-table-column prop="spuName" label="SPU名称" width="300" align="center" />
@@ -43,7 +43,10 @@
                 />
               </el-tooltip>
               <el-tooltip content="删除spu" placement="top">
-                <el-button type="danger" icon="el-icon-delete" style="margin: 10px 5px;" size="mini" @click="reqDeleteAttr(row,$index)" />
+                <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="reqDeleteAttr(row,$index)" @onCancel="cancelDelete($index)">
+                  <el-button slot="reference" type="danger" icon="el-icon-delete" style="margin: 10px 5px;" size="mini" />
+                </el-popconfirm>
+
               </el-tooltip>
 
             </template>
@@ -71,7 +74,7 @@
 import SkuFrom from '@/views/product/Spu/SkuFrom/SkuFrom.vue'
 import SpuFrom from '@/views/product/Spu/SpuFrom/SpuFrom.vue'
 import CategorySelect from '@/components/CategorySelect/CategorySelect.vue'
-import { reqSpuList } from '@/api/product/spu'
+import { reqSpuList, reqDeleteSpu } from '@/api/product/spu'
 export default {
   components: {
     CategorySelect,
@@ -142,14 +145,19 @@ export default {
       this.page = a
       this.getSpuList(this.page)
     },
-    // 点击展示SPu
+    // 点击展示SPu 添加SPU按钮的回调
     handleSpuShow() {
-      this.flag = 2
+      this.flag = 3
+      this.$refs.spu.addSpuData(this.category3Id)
     },
     showOne(a) {
       console.log('父传子', a)
-      this.flag = a
-      this.getSpuList(this.page)
+      this.flag = a.scene
+      if (a.flag == '修改') {
+        this.getSpuList(this.page)
+      } else {
+        this.getSpuList()
+      }
     },
     // 点击修改spu
     updateSpu(row) {
@@ -158,6 +166,16 @@ export default {
       console.log('🚀 ~ updateSpu ~ this.$refs.spu:', this.$refs.spu)
       // 给子组件绑定ref 通过this.$refs.spu可以拿到子组件的数据
       this.$refs.spu.golist(row)
+    },
+    reqDeleteAttr(row, $index) {
+      console.log('删除操作', row, $index)
+      reqDeleteSpu(row.id).then(res => {
+        console.log(res)
+        if (res.code == 200) {
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getSpuList(this.records.length > 1 ? this.page : this.page - 1)
+        }
+      })
     }
 
   }

@@ -91,7 +91,7 @@
       </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="addOrUpdateSpu">保存</el-button>
-        <el-button @click="$emit('showOne',1)">取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
 
     </el-form>
@@ -260,9 +260,30 @@ export default {
             type: 'success',
             message: '保存成功'
           })
-          this.$emit('showOne', 1)
+          this.$emit('showOne', { scene: 1, flag: this.spu.id ? '修改' : '添加' })
         }
       })
+    },
+    // 父组件点击添加SPU,发送请求的函数
+    addSpuData(category3Id) {
+      console.log('addSpuData')
+      this.spu.category3Id = category3Id
+      reqTradeMarkList().then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          this.tradeMarkList = res.data
+        }
+      })
+      reqBaseSaleAttrList().then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          this.saleAttrList = res.data
+        }
+      })
+    },
+    cancel() {
+      this.$emit('showOne', { screen: 1, flag: '' })
+      Object.assign(this._data, this.$options.data())
     }
   }
 }

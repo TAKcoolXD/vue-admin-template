@@ -59,3 +59,10 @@ export function reqAddOrUpdateSpu(spuInfo) {
     return request({ url: '/admin/product/saveSpuInfo', method: 'post', data: spuInfo })
   } // 获取平台全部销售属性 -----整个平台销售属性
 }
+
+export function reqDeleteSpu(spuId) { // 删除属性
+  return request({
+    url: `/admin/product/deleteSpu/${spuId}`,
+    method: 'delete'
+  })
+}
