@@ -51,8 +51,8 @@
         <template slot-scope="{row,$index}">
           <el-button v-if="row.isSale==0" icon="el-icon-sort-up" size="small" type="success" @click="sale(row)" />
           <el-button v-else icon="el-icon-sort-down" size="small" type="success" @click="cancle(row)" />
-          <el-button icon="el-icon-edit" size="small" type="primary" />
-          <el-button icon="el-icon-info" size="small" type="info" />
+          <el-button icon="el-icon-edit" size="small" type="primary" @click="edit()" />
+          <el-button icon="el-icon-info" size="small" type="info" @click="checkInfo(row)" />
           <el-button icon="el-icon-delete-solid" size="small" type="danger" />
         </template>
       </el-table-column>
@@ -73,11 +73,34 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <el-drawer
+      size="50%"
+      title="显示SKU详情"
+      :visible.sync="drawer"
+      :direction="direction"
+      :before-close="handleClose"
+    >
+      <div style="width: 700px;margin: 0 auto;">名称 {{ skuInfo.skuName }}</div>
+      <div style="width: 700px;margin: 0 auto;">描述 {{ skuInfo.skuDesc }}</div>
+      <div style="width: 700px;margin: 0 auto;">价格 {{ skuInfo.price }}</div>
+      <div style="width: 700px;margin: 0 auto;">平台属性
+        <el-tag v-for="item in skuInfo.skuAttrValueList" :key="item.id" style="margin: 0 10px;">{{ item.attrName }}</el-tag>
+      </div>
+      <div style="width: 700px;margin: 0 auto;">商品图片
+        <div>
+          <el-carousel height="150px">
+            <el-carousel-item v-for="item in skuInfo.skuImageList" :key="item">
+              <img :src="item.imgUrl" alt="">
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { reqSkuListdata, reqOnsale, reqCancelSale } from '@/api/product/sku'
+import { reqSkuListdata, reqOnsale, reqCancelSale, reqSkuById } from '@/api/product/sku'
 export default {
   data() {
     return {
@@ -85,7 +108,10 @@ export default {
       limit: 5, // 每一页展示几条
       tatal: '', // 分页器总共数据
       records: [], // 存储sku列表数据
-      pages: ''
+      pages: '',
+      drawer: false, // 控制抽屉的显示
+      direction: 'rtl', // 控制抽屉方向
+      skuInfo: ''
 
     }
   },
@@ -155,6 +181,30 @@ export default {
           })
         }
       })
+    },
+    // 编辑
+    edit() {
+      console.log('编辑操作')
+      this.$message({ message: '编辑操作正在开发中' })
+    },
+    // 查看信息
+    checkInfo(row) {
+      console.log(row)
+      reqSkuById(row.id).then(res => {
+        console.log(res)
+        if (res.code == 200) {
+          this.drawer = true
+          this.skuInfo = res.data
+        }
+      })
+    },
+    // 关闭抽屉
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
     }
   }
 }
@@ -163,3 +213,20 @@ export default {
     <style>
 
     </style>
+<style>
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 150px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+   background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+   background-color: #d3dce6;
+}
+</style>

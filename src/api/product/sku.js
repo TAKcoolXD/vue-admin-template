@@ -52,3 +52,10 @@ export function reqCancelSale(skuId) { // 获取SKU列表数据的接口
     method: 'get'
   })
 }
+
+export function reqSkuById(skuId) { // 获取SKU详情
+  return request({
+    url: `/admin/product/getSkuById/${skuId}`,
+    method: 'get'
+  })
+}
