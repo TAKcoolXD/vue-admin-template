@@ -34,3 +34,21 @@ export function reqSkuList(spuId) { // 获取SKU列表数据的接口
     method: 'get'
   })
 }
+export function reqSkuListdata(page, limit) { // 获取SKU列表数据的接口
+  return request({
+    url: `/admin/product/list/${page}/${limit}`,
+    method: 'get'
+  })
+}
+export function reqOnsale(skuId) { // 获取SKU列表数据的接口
+  return request({
+    url: `/admin/product/onSale/${skuId}`,
+    method: 'get'
+  })
+}
+export function reqCancelSale(skuId) { // 获取SKU列表数据的接口
+  return request({
+    url: `/admin/product/cancelSale/${skuId}`,
+    method: 'get'
+  })
+}
