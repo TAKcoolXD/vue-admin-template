@@ -74,7 +74,37 @@
         width="50%"
         :before-close="handleClose"
       >
-        <span>这是一段信息</span>
+        <el-table
+          v-loading="loading"
+          border
+          :data="skuList"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="skuName"
+            label="名称"
+            width="width"
+          />
+          <el-table-column
+            prop="price"
+            label="价格"
+            width="width"
+          />
+          <el-table-column
+            prop="weight"
+            label="重量"
+            width="width"
+          />
+          <el-table-column
+            width="width"
+            prop="prop"
+            label="默认图片"
+          >
+            <template slot-scope="{row,$index}">
+              <img :src="row.skuDefaultImg" alt="" style="width: 100px;height: 100px;">
+            </template>
+          </el-table-column>
+        </el-table>
       </el-dialog>
     </el-card>
   </div>
@@ -103,7 +133,9 @@ export default {
       records: '',
       flag: 1,
       spu: {},
-      dialogVisible: false
+      dialogVisible: false,
+      skuList: [],
+      loading: true
 
     }
   },
@@ -204,9 +236,21 @@ export default {
       this.dialogVisible = true
       console.log('查看spu和sku', row)
       this.spu = row
-      reqSkuList().then(res => {
+      reqSkuList(row.id).then(res => {
         console.log(res)
+        if (res.code === 200) {
+          this.skuList = res.data
+          this.loading = false // loading效果展示一次 有问题 快速查看 上次的信息会显示
+        }
       })
+    },
+    // 关闭对话框
+    handleClose(a) {
+      // 解决loading效果展示一次 有问题 快速查看 上次的信息会显示
+      console.log('关闭对话框')
+      this.loading = true
+      this.skuList = []
+      a()
     }
 
   }
