@@ -53,12 +53,6 @@
         </el-card>
       </el-col>
     </el-row>
-    <div style="margin-top: 70px;">
-      <el-row :gutter="20">
-        <el-col :span="16"><div class="grid-content bg-purple">1</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple">2</div></el-col>
-      </el-row>
-    </div>
 
   </div>
 </template>

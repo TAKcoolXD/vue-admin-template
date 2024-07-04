@@ -1,16 +1,19 @@
 <template>
   <div class="dashboard-container">
     <card />
+    <sale style="margin-top: 20px;" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import card from '@/views/dashboard/card/card.vue'
+import sale from '@/views/dashboard/sale/sale.vue'
 export default {
   name: 'Dashboard',
   components: {
-    card
+    card,
+    sale
   },
   computed: {
     ...mapGetters([
