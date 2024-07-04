@@ -51,7 +51,6 @@
             </template>
           </detail>
         </el-card>
-
       </el-col>
     </el-row>
     <div style="margin-top: 70px;">
@@ -96,8 +95,12 @@ export default {
         {
           data: [120, 200, 150, 80, 70, 110, 130],
           type: 'bar',
-          color: '#64d9d6'
-
+          //   color: '#64d9d6',
+          colorBy: 'data',
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.2)'
+          }
         }
       ]
     })
